@@ -1,5 +1,16 @@
 {
   "name": "at_vite",
   "private": true,
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "scripts": {
+    "w": "pnpm --filter @at_vite/webapp",
+    "b": "pnpm --filter @at_vite/backend",
+    "types": "pnpm -r --parallel types"
+  },
+  "devDependencies": {
+    "rimraf": "^6.1.3",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
 }
