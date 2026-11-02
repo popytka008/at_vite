@@ -9,7 +9,6 @@ export const viewIdeaRouteParams = getRouteParams({ideaNick: true})
 
 // export const viewIdeaRouteParams = {ideaNick: ':ideaNick'}
 export type ViewIdeaRouteParams = typeof viewIdeaRouteParams
-export const getViewIdeaRoute = ({ideaNick}: ViewIdeaRouteParams) =>
-  `/ideas/${ideaNick}`
-
+export const getViewIdeaRoute = ({ideaNick}: ViewIdeaRouteParams) => `/ideas/${ideaNick}`
+export const getNewIdeaRoute = () => `/ideas/new`
 // export const viewIdeaRouteParams = {ideaNick: ':ideaNick'}
