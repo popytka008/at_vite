@@ -2,6 +2,7 @@ packages:
   - backend
   - webapp
 allowBuilds:
+  '@parcel/watcher': false
   esbuild: false
 permissions:
   '@trpc/server':

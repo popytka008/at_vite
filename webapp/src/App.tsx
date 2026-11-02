@@ -4,7 +4,7 @@ import {BrowserRouter, Route, Routes}                            from 'react-rou
 import {ViewIdeaPage}                                            from './pages/ViewIdeaPage'
 import {getAllIdeasRoute, getViewIdeaRoute, viewIdeaRouteParams} from './lib/route.ts'
 import {Layout}                                                  from './components/Layout'
-
+import './styles/global.scss'
 
 export const App = () =>{
   
