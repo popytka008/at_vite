@@ -6,7 +6,7 @@ import css                from './index.module.scss'
 
 export const AllIdeasPage = () => {
   
-  const result = trpc.ideas.getIdeas.useQuery()
+  const result = trpc.getIdeas.useQuery()
   console.log(result)
   
   if (result.isPending || result.isFetching) {
@@ -18,7 +18,6 @@ export const AllIdeasPage = () => {
   
   return (
     <Segment title="All Ideas">
-      <h1 className={css.title}>Ideas!</h1>
       <div className={css.ideas}>
         {result.data.ideas.map((idea) => (
           <div className={css.idea} key={idea.nick}>
@@ -31,34 +30,7 @@ export const AllIdeasPage = () => {
               description={idea.description}
             />
           </div>
-          /*
-          <h2 className={css.ideaName}>
-              <Link className={css.ideaLink} to={getViewIdeaRoute({ideaNick: idea.nick})}>
-                {idea.name}
-              </Link>
-            </h2>
-            <p className={css.ideaDescription}>{idea.description}</p>
-          */
         ))}</div>
     </Segment>
   )
-  /*
-  return (
-    <div>
-      <h1 className={css.title}>Ideas!</h1>
-      <div className={css.ideas}>
-        {result.data.ideas.map((idea) => (
-          <div className={css.idea} key={idea.nick}>
-            <h2 className={css.ideaName}>
-              <Link className={css.ideaLink} to={getViewIdeaRoute({ideaNick: idea.nick})}>
-                {idea.name}
-              </Link>
-            </h2>
-            <p className={css.ideaDescription}>{idea.description}</p>
-          </div>
-        ))}</div>
-    </div>
-    
-   */
-  // )
 }

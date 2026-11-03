@@ -7,7 +7,7 @@ import {Segment}                  from '../../components/Segment'
 export const ViewIdeaPage = () => {
   const {ideaNick} = useParams() as ViewIdeaRouteParams
   
-  const result = trpc.ideas.getIdea.useQuery({ideaNick})
+  const result = trpc.getIdea.useQuery({ideaNick})
   
   if (result.isPending || result.isFetching) {
     return `<div>Is loading...</div>`

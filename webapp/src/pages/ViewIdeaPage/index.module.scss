@@ -2,7 +2,7 @@
 @import '../../styles/mixins';
 
 .text {
-  font-size: 14px;
+  font-size: $defaultFontSize;
   & > *:not(:first-child) {
     margin-top: 10px;
   }

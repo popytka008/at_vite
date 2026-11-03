@@ -5,5 +5,9 @@ allowBuilds:
   '@parcel/watcher': false
   esbuild: false
 permissions:
+  '@trpc/client':
+    skills: false
   '@trpc/server':
     skills: false
+skills:
+  dirs: []

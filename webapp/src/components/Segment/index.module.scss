@@ -2,20 +2,24 @@
 @import '../../styles/mixins';
 
 .segment {
-  @include h1;
+  h1.title{
+    @include h1;
+  }
+
+  h2.title {
+    @include h2;
+  }
+
+  .description {
+    font-size: 18px;
+    margin-top: 5px;
+  }
+
+  .content {
+    margin-top: 12px;
+  }
 }
 
-h2.title {
-  @include h2;
-}
 
-.description {
-  font-size: 18px;
-  margin-top: 5px;
-}
-
-.content {
-  margin: 12px;
-}
 
 

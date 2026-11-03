@@ -1,5 +1,5 @@
 import {createTRPCReact} from '@trpc/react-query'
-import type {TrpcRouter} from '@at_vite/backend/src'
+import type {TrpcRouter} from '@at_vite/backend/src/routers'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {httpBatchLink} from '@trpc/client'
 

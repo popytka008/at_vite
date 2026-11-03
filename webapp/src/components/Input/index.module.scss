@@ -1,0 +1,9 @@
+@import '../../styles/vars';
+@import '../../styles/mixins';
+
+.input {
+  label {
+    font-size: $defaultFontSize;
+
+  }
+}
