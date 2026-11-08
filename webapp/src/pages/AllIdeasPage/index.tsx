@@ -12,10 +12,15 @@ export const AllIdeasPage = () => {
   if (result.isPending || result.isFetching) {
     return <div className="loading">Грузимся... грузимся...</div>
   }
+  console.log('after pending/fetching')
   if (result.isError) {
     return (<div className="error">{result.error.message}</div>)
   }
-  
+  console.log('after error')
+  if (result.isSuccess) {
+    console.log(result.data.ideas.toString())
+  }
+  console.log('result', result.data.ideas)
   return (
     <Segment title="All Ideas">
       <div className={css.ideas}>

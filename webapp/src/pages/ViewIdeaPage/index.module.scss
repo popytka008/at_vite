@@ -1,9 +1,14 @@
-@import '../../styles/vars';
-@import '../../styles/mixins';
+@use '../../styles/vars' as vars;
+@use '../../styles/mixins' as mixins;
 
 .text {
-  font-size: $defaultFontSize;
+  font-size: vars.$defaultFontSize;
   & > *:not(:first-child) {
     margin-top: 10px;
   }
+}
+
+.createdAt {
+  font-size: 12px;
+  margin-bottom: 10px;
 }

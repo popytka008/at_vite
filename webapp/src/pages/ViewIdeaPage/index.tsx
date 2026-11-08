@@ -16,16 +16,15 @@ export const ViewIdeaPage = () => {
     return <div>Error: {result.error.message}</div>
   }
   const idea = result.data.idea
+  console.log('data:', idea)
+  
   return (
-    <Segment title={idea.name} description={idea.description}>
-      <div className={css.text} dangerouslySetInnerHTML={{__html: idea.text}}/>
-    </Segment>
-    /*
-        <div>
-      <h1 className={css.title}>{idea.name}</h1>
-      <p className={css.description}>{idea.description}</p>
-      <div className={css.text} dangerouslySetInnerHTML={{__html: idea.text}}/>
-    </div>
-     */
+    idea ? (
+      <Segment title={idea.name} description={idea.description}>
+        <div className={css.createdAt}>{idea.createdAt.toString()}</div>
+        <div className={css.text} dangerouslySetInnerHTML={{__html: idea.text}}/>
+      </Segment>
+    ) : ''
+  
   )
 }

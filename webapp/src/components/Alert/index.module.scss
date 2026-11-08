@@ -1,0 +1,17 @@
+@use "../../styles/vars" as vars;
+@use "../../styles/mixins" as mixins;
+
+.alert {
+  padding: 10px;
+  border-radius: vars.$borderRadiusSmall;
+
+  &.red {
+    background-color: deeppink;
+    color: indigo;
+  }
+
+  &.green {
+    background-color: greenyellow;
+    color: darkgreen;
+  }
+}

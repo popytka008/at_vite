@@ -1,7 +1,5 @@
-import {t}     from '../../trpc.js'
-import {z}     from 'zod'
-// import _   from 'lodash'
-import {ideas} from '../../lib/ideas.js'
+import {t} from '../../trpc.js'
+import {z} from 'zod'
 
 
 export const getIdeaTrpcRoute = t.procedure
@@ -10,13 +8,14 @@ export const getIdeaTrpcRoute = t.procedure
       ideaNick: z.string()
     })
   )
-  .query(({input}) => {
-    const idea = ideas.find(item => {
-      return item.nick === input.ideaNick
+  .query(async ({ctx, input}) => {
+    
+    const idea = await ctx.prisma.idea.findUnique({
+      where: {
+        nick: input.ideaNick
+      }
     })
-    if (!idea) {
-      throw new Error(`Idea ${input.ideaNick} not found ! :(`)
-    }
-    return {idea: idea || null}
+    return {idea}
+    
   })
 

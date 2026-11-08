@@ -4,10 +4,17 @@ packages:
 allowBuilds:
   '@parcel/watcher': false
   esbuild: false
+  workerd: false
 permissions:
+  '@prisma/client':
+    build: false
+  '@prisma/engines':
+    build: true
   '@trpc/client':
     skills: false
   '@trpc/server':
     skills: false
+  prisma:
+    build: true
 skills:
   dirs: []
