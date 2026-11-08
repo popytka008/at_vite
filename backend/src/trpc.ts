@@ -18,7 +18,7 @@ const getCreateTrpcContext = (appContext: AppContext) =>
 
 // type TrpcContext = inferAsyncReturnType<ReturnType<typeof getCreateTrpcContext>>
 type TrpcContext = inferAsyncReturnType<typeof getCreateTrpcContext>
-//@TODO посмотри на superjson
+//@TODO посмотри на superjson - он рабочий, просто редактор кода не успевает за связями.
 
 export const t = initTRPC
   .context<TrpcContext>()
