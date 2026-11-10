@@ -22,7 +22,6 @@
       "node"
     ],
     "declaration": true,
-    "moduleResolution": "NodeNext"
   },
   "include": [
     "src"

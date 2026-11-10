@@ -2,7 +2,7 @@ import {Segment}              from '../../components/Segment'
 import {Input}                from '../../components/Input'
 import {Textarea}             from '../../components/Textarea'
 import {useFormik}            from 'formik'
-import {withZodSchema}        from 'formik-validator-zod'
+// import {withZodSchema}        from 'formik-validator-zod'
 import {trpc}                 from '../../lib/trpc.tsx'
 import {zCreateIdeaTrpcInput} from '@at_vite/backend/src/routers/createIdea/input.ts'
 import {useState}             from 'react'
@@ -11,7 +11,7 @@ import {Button} from '../../components/Button'
 
 export const NewIdeaPage = () => {
   const [successMessageVisible, setSuccessMessageVisible] = useState(false)
-  const [submittingError, setSubmittingError] = useState(null)
+  const [submittingError, setSubmittingError] = useState<string | null>(null)
   const createIdea = trpc.createIdea.useMutation()
   const formik = useFormik({
     initialValues: {
@@ -20,7 +20,17 @@ export const NewIdeaPage = () => {
       description: '',
       text: ''
     },
-    validate: withZodSchema(zCreateIdeaTrpcInput as any),
+    validate: values => {
+      const rez = zCreateIdeaTrpcInput.safeParse(values)
+      if (rez.success) return {}
+      
+      const errors: Record<string, string> = {}
+      for (const issue of rez.error.issues) {
+        const key = issue.path.join('.')
+        if (!errors[key]) errors[key] = issue.message
+      }
+      return errors
+    },
     onSubmit: async (values) => {
       try {
         await createIdea.mutateAsync(values)
@@ -32,7 +42,7 @@ export const NewIdeaPage = () => {
       } catch (e: any) {
         setSubmittingError(e.message)
         setTimeout(() => {
-          setSubmittingError(e.null)
+          setSubmittingError(null)
         }, 3000)
       }
     }
@@ -58,7 +68,7 @@ export const NewIdeaPage = () => {
         {/*<button type="submit" disabled={formik.isSubmitting}>*/}
         {/*  {formik.isSubmitting ? 'Submitting...' : 'Create Idea'}*/}
         {/*</button>*/}
-        <Button loading={formik.isSubmitting}>'Create Idea'</Button>
+        <Button loading={formik.isSubmitting}>Create Idea</Button>
       </form>
     </Segment>
   )

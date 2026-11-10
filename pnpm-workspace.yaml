@@ -1,6 +1,9 @@
 packages:
   - backend
   - webapp
+catalog:
+  zod: ^4.6.7
+
 allowBuilds:
   '@parcel/watcher': false
   esbuild: false

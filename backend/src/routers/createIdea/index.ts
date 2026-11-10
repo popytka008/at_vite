@@ -5,6 +5,9 @@ import {zCreateIdeaTrpcInput} from './input.js'
 export const createIdeaTrpcRoute = t.procedure
   .input(zCreateIdeaTrpcInput)
   .mutation(async ({ctx, input}) => {
+    if (!ctx.me) {
+      throw new Error('Not authenticated')
+    }
     const exIdea = await ctx.prisma.idea.findUnique({
       where: {
         nick: input.nick
@@ -16,7 +19,7 @@ export const createIdeaTrpcRoute = t.procedure
     }
     
     await ctx.prisma.idea.create({
-      data: input
+      data: {...input, authorId: ctx.me.id}
     })
     
     return 'done createIdeaTrpcRoute'

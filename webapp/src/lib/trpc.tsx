@@ -2,13 +2,14 @@ import {createTRPCReact} from '@trpc/react-query'
 import type {TrpcRouter} from '@at_vite/backend/src/routers/index.ts'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {httpBatchLink} from '@trpc/client'
-import Cookies           from 'js-cookie'
-import superjson         from 'superjson'
 import {env}             from './env.ts'
-// import {httpBatchStreamLink} from '@trpc/client'
+import superjson from 'superjson'
+import Cookies   from 'js-cookie'
+
 
 export const trpc
   = createTRPCReact<TrpcRouter>()
+
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,12 +21,10 @@ const queryClient = new QueryClient({
 })
 
 const trpcClient = trpc.createClient({
-  // transformer: superjson,
   links: [
     httpBatchLink({
-      // httpBatchStreamLink({
       url: env.VITE_BACKEND_TRPC_URL,
-      transformer: superjson as any,
+      transformer: superjson,
       headers: () => {
         const token = Cookies.get('token')
         return {
@@ -36,12 +35,12 @@ const trpcClient = trpc.createClient({
   ]
 })
 
-export const TrpcProvider = (
-  {children}: { children: React.ReactNode }
-) => {
-  return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </trpc.Provider>
-  )
-}
+export const TrpcProvider = ({
+                               children
+                             }: {
+  children: React.ReactNode
+}) => (
+  <trpc.Provider client={trpcClient} queryClient={queryClient}>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  </trpc.Provider>
+)

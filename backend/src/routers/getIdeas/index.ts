@@ -1,7 +1,22 @@
 import {t} from '../../trpc.js'
+import {z} from 'zod'
+
+export const zGetIdeasTrpcOutput = z.object({
+  ideas: z.array(
+    z.object({
+      id: z.number(),
+      nick: z.string(),
+      name: z.string(),
+      description: z.string(),
+      createdAt: z.string()
+    })
+  )
+})
 
 
-export const getIdeasTrpcRoute = t.procedure.query(async ({ctx}) => {
+export const getIdeasTrpcRoute = t.procedure
+  .output(zGetIdeasTrpcOutput)
+  .query(async ({ctx}) => {
   
   const ideas = await ctx.prisma.idea.findMany({
     select: {
@@ -9,13 +24,19 @@ export const getIdeasTrpcRoute = t.procedure.query(async ({ctx}) => {
       nick: true,
       name: true,
       description: true,
-      // createdAt: true
+      createdAt: true
     },
     orderBy: {
       createdAt: 'desc'
     }
   })
-  
-  return {ideas}
+    
+    return {
+      ideas: ideas.map(idea => ({
+          ...idea,
+          createdAt: idea.createdAt.toISOString()
+        })
+      )
+    }
 })
 
