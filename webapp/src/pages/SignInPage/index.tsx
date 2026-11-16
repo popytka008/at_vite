@@ -1,5 +1,3 @@
-import {useFormik}        from 'formik'
-import {useState}         from 'react'
 import {trpc}             from '../../lib/trpc.tsx'
 import {zSignInTrpcInput} from '@at_vite/backend/src/routers/signIn/input.ts'
 import {Segment}          from '../../components/Segment'
@@ -8,42 +6,29 @@ import {Input}            from '../../components/Input'
 import {Alert}            from '../../components/Alert'
 import {Button}           from '../../components/Button'
 import Cookies            from 'js-cookie'
-import {useNavigate}      from 'react-router-dom'
-import {getAllIdeasRoute} from '../../lib/routes.ts'
+// import {useNavigate}      from 'react-router-dom'
+// import {getAllIdeasRoute} from '../../lib/routes.ts'
+import {useForm}         from '../../lib/form.tsx'
+import {withPageWrapper} from '../../lib/withPageWrapper.tsx'
 
-export const SignInPage = () => {
-  const [submittingError, setSubmittingError] = useState<string | null>(null)
+export const SignInPage = withPageWrapper({
+  redirectAuthorized: true
+})(() => {
   const signIn = trpc.signIn.useMutation()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const utils = trpc.useUtils()
-  // const validationSchema = z.object({
-  
-  const formik = useFormik({
-    initialValues: {
-      nick: '',
-      password: ''
-    },
-    validate: values => {
-      const rez = zSignInTrpcInput.safeParse(values)
-      if (rez.success) return {}
-      
-      const errors: Record<string, string> = {}
-      for (const issue of rez.error.issues) {
-        const key = issue.path.join('.')
-        if (!errors[key]) errors[key] = issue.message
-      }
-      return errors
-    },
+  const initialValues = {
+    nick: '',
+    password: ''
+  }
+  const {formik, buttonProps, alertProps} = useForm({
+    initialValues,
+    validationSchema: zSignInTrpcInput,
     onSubmit: async (values) => {
-      try {
-        const {token} = await signIn.mutateAsync(values)
-        Cookies.set('token', token, {expires: 99999})
-        utils.getMe.invalidate()
-        navigate(getAllIdeasRoute())
-        
-      } catch (err: any) {
-        setSubmittingError(err.message)
-      }
+      const {token} = await signIn.mutateAsync(values)
+      Cookies.set('token', token, {expires: 99999})
+      await utils.getMe.invalidate()
+      // navigate(getAllIdeasRoute())
     }
   })
   
@@ -53,11 +38,10 @@ export const SignInPage = () => {
         <FormItems>
           <Input name="nick" label="Nick" formik={formik}/>
           <Input name="password" label="Password" formik={formik} type="password"/>
-          {!formik.isValid && !!formik.submitCount && <Alert color="red">Invalid nick or/and password</Alert>}
-          {submittingError && <Alert color="red">{submittingError}</Alert>}
-          <Button loading={formik.isSubmitting}>Sign In</Button>
+          <Alert {...alertProps} />
+          <Button {...buttonProps}>Sign In</Button>
         </FormItems>
       </form>
     </Segment>
   )
-}
+})

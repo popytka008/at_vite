@@ -1,3 +1,58 @@
+import {trpc}             from '../../lib/trpc.tsx'
+import {zSignUpTrpcInput} from '@at_vite/backend/src/routers/signUp/input.ts'
+import {Segment}          from '../../components/Segment'
+import {Input}            from '../../components/Input'
+import {Button}           from '../../components/Button'
+import {Alert}            from '../../components/Alert'
+import {FormItems}        from '../../components/FormItems'
+import Cookies            from 'js-cookie'
+// import {useNavigate}      from 'react-router-dom'
+// import {getAllIdeasRoute} from '../../lib/routes.ts'
+import {useForm}          from '../../lib/form.tsx'
+import {withPageWrapper}  from '../../lib/withPageWrapper.tsx'
+// import css from './index.module.scss'
+
+export const SignUpPage = withPageWrapper({
+  redirectAuthorized: true
+})(() => {
+  const signUp = trpc.signUp.useMutation()
+  // const navigate = useNavigate()
+  const utils = trpc.useUtils()
+  const initialValues = {
+    nick: '',
+    password: '',
+    passwordAgain: ''
+  }
+  
+  const {formik, buttonProps, alertProps} = useForm({
+    initialValues,
+    validationSchema: zSignUpTrpcInput,
+    onSubmit: async (values) => {
+      const {token} = await signUp.mutateAsync(values)
+      Cookies.set('token', token, {expires: 99999})
+      await utils.getMe.invalidate()
+      // navigate(getAllIdeasRoute())
+    },
+    resetOnSuccess: false
+  })
+  
+  return (
+    <Segment title="Sugn Up">
+      <form onSubmit={formik.handleSubmit}>
+        <FormItems>
+          <Input name="nick" label="Nick" formik={formik}/>
+          <Input name="password" label="Password" formik={formik} type="password"/>
+          <Input name="passwordAgain" label="Repeat Password" formik={formik} type="password"/>
+          <Alert {...alertProps}/>
+          <Button {...buttonProps}>Sign up</Button>
+        </FormItems>
+      </form>
+    </Segment>
+  )
+})
+
+
+/*
 // import css from './index.module.scss'
 
 import {useState}         from 'react'
@@ -79,3 +134,4 @@ export const SignUpPage = () => {
     </Segment>
   )
 }
+ */

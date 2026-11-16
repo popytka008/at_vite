@@ -10,12 +10,15 @@ import {SignInPage}  from './pages/SignInPage'
 import {SignOutPage}  from './pages/SignOutPage'
 import {EditIdeaPage} from './pages/EditIdeaPage'
 import './styles/global.scss'
+import {AppContextProvider} from './lib/ctx.tsx'
+import {NotFoundPage}       from './pages/NotFoundPage'
 
 export const App = () => {
   
   return (
     <TrpcProvider>
-      <BrowserRouter>
+      <AppContextProvider>
+        <BrowserRouter>
         <Routes>
           <Route path={routes.getSignOutRoute()} element={<SignOutPage/>}/>
           <Route element={<Layout/>}>
@@ -25,9 +28,11 @@ export const App = () => {
             <Route path={routes.getSignUpRoute()} element={<SignUpPage/>}/>
             <Route path={routes.getSignInRoute()} element={<SignInPage/>}/>
             <Route path={routes.getEditIdeaRoute(routes.editIdeaRouteParams)} element={<EditIdeaPage/>}/>
+            <Route path="*" element={<NotFoundPage/>}/>
           </Route>
         </Routes>
-      </BrowserRouter>
+        </BrowserRouter>
+      </AppContextProvider>
     </TrpcProvider>
   )
 }
