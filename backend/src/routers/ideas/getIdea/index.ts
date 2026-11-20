@@ -9,7 +9,7 @@ const serializeIdea = (idea: {
   text: string
   authorId: number
   createdAt: Date
-  author: { id: number, nick: string }
+  author: { id: number, nick: string, name: string }
 }) => ({
   ...idea,
   createdAt: idea.createdAt.toISOString()
