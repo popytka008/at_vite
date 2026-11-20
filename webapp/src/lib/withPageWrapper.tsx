@@ -3,8 +3,8 @@ import {type AppContext, useAppContext} from './ctx.tsx'
 import {useNavigate}                    from 'react-router-dom'
 import {useEffect}                      from 'react'
 import {getAllIdeasRoute}               from './routes.ts'
-import {ErrorPageComponent}             from '../components/ErrorPageComponent'
-import {NotFoundPage}                   from '../pages/NotFoundPage'
+import {ErrorPageComponent} from '../components/ErrorPageComponent'
+import {NotFoundPage}       from '../pages/others/NotFoundPage'
 
 class CheckExistsError extends Error {
 }
@@ -13,6 +13,9 @@ class CheckAccessError extends Error {
 }
 
 export class AnotherAuthorError extends Error {
+}
+
+export class GetAuthorizedError extends Error {
 }
 
 const checkExistsFn = <T, >(value: T, message?: string): NonNullable<T> => {
@@ -41,6 +44,7 @@ type HelperProps<TQueryResult extends QueryResult | undefined> = {
 type SetPropsProps<TQueryResult extends QueryResult | undefined> = HelperProps<TQueryResult> & {
   checkExists: typeof checkExistsFn
   checkAccess: typeof checkAccessFn
+  getAuthorizedMe: (errorMessage?: string) => NonNullable<AppContext['me']>
 }
 type PageWrapperProps<TProps extends Props, TQueryResult extends QueryResult | undefined>
   = {
@@ -118,9 +122,22 @@ const PageWrapper =
         return <NotFoundPage title={checkAccessTitle} message={checkAccessMessage}/>
       }
     }
+    const getAuthorizedMe = (errorMessage?: string) => {
+      if (!ctx.me) {
+        throw new GetAuthorizedError(errorMessage)
+      }
+      return ctx.me
+    }
+    
+    
     // проверка существования самой идеи
     try {
-      const props = setProps?.({...helperProps, checkExists: checkExistsFn, checkAccess: checkAccessFn}) as TProps
+      const props = setProps?.({
+        ...helperProps,
+        checkExists: checkExistsFn,
+        checkAccess: checkAccessFn,
+        getAuthorizedMe
+      }) as TProps
       
       return <Page {...props}/>
     } catch (e: unknown) {
@@ -135,6 +152,10 @@ const PageWrapper =
       if (e instanceof AnotherAuthorError) {
         return <ErrorPageComponent title={checkAccessTitle}
                                    message={e.message || checkAccessMessage}/>
+      }
+      if (e instanceof GetAuthorizedError) {
+        return <ErrorPageComponent title={authorizedOnlyTitle}
+                                   message={e.message || authorizedOnlyMessage}/>
       }
       // чужая ошибка - прокинуть дальше
       throw e
